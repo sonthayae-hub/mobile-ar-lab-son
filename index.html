@@ -61,6 +61,7 @@
 
     #run-button { background: #ffffff; color: #111111; }
     #status-button { background: #ffd54f; color: #111111; }
+	#speed-button { background: #29b6f6; color: #111111; }
 
     .hint {
       display: block;
@@ -100,6 +101,16 @@
       const topPanel = document.querySelector('#top-panel');
       const runButton = document.querySelector('#run-button');
       const statusButton = document.querySelector('#status-button');
+	  const speedButton = document.querySelector('#speed-button');
+	  const BASE_SPEED = 400;
+	  const speedLevels = [4, 8, 12, 16];
+		let speedIndex = 0;
+
+	function applySpeed() {
+	  const multiplier = speedLevels[speedIndex];
+			shaft.setAttribute('spin-control', 'speed', BASE_SPEED * multiplier);
+			speedButton.textContent = `ความเร็ว: ${multiplier}x`;
+}
 
       let running = true;
       let warning = false;
@@ -128,13 +139,20 @@
           arLabel.setAttribute('value', 'MOTOR M1\nSTATUS: WARNING');
           statusButton.textContent = 'เปลี่ยนเป็นปกติ';
         } else {
-          motorBody.setAttribute('color', '#1976d2');
+          motorBody.setAttribute('color', '#4cdc4c');
           warningLamp.setAttribute('color', '#00e676');
           warningLamp.setAttribute('material', 'emissive', '#00c853');
           arLabel.setAttribute('value', 'MOTOR M1\nSTATUS: NORMAL');
           statusButton.textContent = 'จำลองคำเตือน';
         }
       });
+
+      speedButton.addEventListener('click', () => {
+        speedIndex = (speedIndex + 1) % speedLevels.length;
+        applySpeed();
+      });
+
+      applySpeed();
     });
   </script>
 </head>
@@ -148,6 +166,7 @@
   <div id="controls">
     <button id="run-button" type="button">หยุดมอเตอร์</button>
     <button id="status-button" type="button">จำลองคำเตือน</button>
+	<button id="speed-button" type="button">ความเร็ว: 1x</button>
   </div>
 
   <a-scene
@@ -187,7 +206,7 @@
         radius="0.32"
         height="0.72"
         segments-radial="32"
-        color="#1976d2"
+		color="#4cdc4c"  
         metalness="0.25"
         roughness="0.55"
       ></a-cylinder>
